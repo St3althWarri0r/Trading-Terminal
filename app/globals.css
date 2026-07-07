@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+/*
+ * Trading Terminal design system — a Bloomberg-inspired dark theme.
+ * Colors are exposed as Tailwind v4 theme tokens so utilities like
+ * `bg-term-panel`, `text-term-amber`, `border-term-line` just work.
+ */
+@theme {
+  --color-term-bg: #05080b;
+  --color-term-panel: #0a0e14;
+  --color-term-panel-2: #0e141c;
+  --color-term-row: #10171f;
+  --color-term-line: #1a2029;
+  --color-term-line-bright: #2b3744;
+
+  --color-term-amber: #ffa028;
+  --color-term-amber-bright: #ffbe5c;
+  --color-term-amber-dim: #c68a2c;
+
+  --color-term-text: #b7c3ce;
+  --color-term-dim: #828e9b;
+  --color-term-bright: #e9eff4;
+
+  --color-term-up: #26d17c;
+  --color-term-down: #ff5b52;
+  --color-term-cyan: #46c9dd;
+  --color-term-yellow: #ffd23f;
+  --color-term-blue: #4a90e2;
+  --color-term-magenta: #c678dd;
+
+  --font-mono: var(--font-plex-mono), ui-monospace, "SF Mono", Menlo, Consolas,
+    monospace;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    height: 100%;
+  }
+
+  body {
+    background: var(--color-term-bg);
+    color: var(--color-term-text);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums slashed-zero;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow: hidden; /* the terminal manages its own scroll regions */
+  }
+
+  ::selection {
+    background: var(--color-term-amber);
+    color: #000;
+  }
+
+  /* Thin, terminal-style scrollbars. */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-term-line-bright) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-term-line-bright);
+    border-radius: 0;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--color-term-amber-dim);
+  }
+}
+
+@layer utilities {
+  /* Blinking "live" indicator dot. */
+  @keyframes term-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.2;
+    }
+  }
+  .animate-term-blink {
+    animation: term-blink 1.4s steps(2, start) infinite;
+  }
+
+  /* Brief row flash when a value ticks up or down (toggled by JS). */
+  @keyframes term-flash-up {
+    from {
+      background-color: color-mix(in srgb, var(--color-term-up) 30%, transparent);
+    }
+    to {
+      background-color: transparent;
+    }
+  }
+  @keyframes term-flash-down {
+    from {
+      background-color: color-mix(in srgb, var(--color-term-down) 30%, transparent);
+    }
+    to {
+      background-color: transparent;
+    }
+  }
+  .flash-up {
+    animation: term-flash-up 0.7s ease-out;
+  }
+  .flash-down {
+    animation: term-flash-down 0.7s ease-out;
+  }
+
+  .text-glow-amber {
+    text-shadow: 0 0 6px color-mix(in srgb, var(--color-term-amber) 45%, transparent);
+  }
+
+  /* Respect users who prefer reduced motion: keep indicators legible but still. */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-term-blink {
+      animation: none;
+      opacity: 1;
+    }
+    .flash-up,
+    .flash-down {
+      animation: none;
+    }
+  }
+}
