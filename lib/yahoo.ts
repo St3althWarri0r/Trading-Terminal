@@ -284,7 +284,9 @@ export async function getNews(symbol?: string): Promise<NewsItem[]> {
   // Yahoo's search endpoint doubles as a decent news source. For a market-wide
   // feed we query a broad market term; for a symbol we query the symbol.
   const query = symbol?.trim() ? safeSym(symbol) : "stock market";
-  return cached(`news:${query.toLowerCase()}`, 120_000, async () => {
+  // Short TTL so the news panel's manual refresh pulls genuinely fresh
+  // headlines; clients only poll every 120s, so Yahoo load stays polite.
+  return cached(`news:${query.toLowerCase()}`, 30_000, async () => {
     const res: any = await yf.search(query, { newsCount: 12, quotesCount: 0 });
     return normalizeNews(Array.isArray(res?.news) ? res.news : []);
   });

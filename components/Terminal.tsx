@@ -100,7 +100,7 @@ export default function Terminal() {
               {tab === "chart" && <ChartPanel />}
               {tab === "fundamentals" && <Fundamentals />}
               {tab === "news" && (
-                <NewsPanel symbol={symbol} title={`${symbol} · Company News`} code="CN" />
+                <NewsPanel symbol={symbol} title={`${symbol} · Company News`} />
               )}
             </div>
           </div>
@@ -108,7 +108,7 @@ export default function Terminal() {
           {/* Right: watchlist + market news */}
           <div className="grid min-h-0 grid-rows-[minmax(14rem,1fr)_minmax(14rem,1fr)] gap-1 lg:h-full">
             <Watchlist />
-            <NewsPanel title="Market News" code="N" />
+            <NewsPanel title="Market News" />
           </div>
         </div>
       </main>

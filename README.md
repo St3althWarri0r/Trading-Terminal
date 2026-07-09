@@ -26,7 +26,7 @@ Market data comes from **Yahoo Finance** (via the [`yahoo-finance2`](https://git
 - **Interactive charts** — candlesticks with volume and toggleable SMA 20 / SMA 50 / EMA 200 overlays, across 1D → MAX timeframes, powered by TradingView's [`lightweight-charts`](https://github.com/tradingview/lightweight-charts). Crosshair shows O/H/L/C.
 - **Security detail** — big price display, day/52-week ranges, market cap, P/E, volume, and extended-hours pricing.
 - **Fundamentals** — company profile, valuation multiples, margins & returns, cash/debt, per-share metrics, and analyst price targets.
-- **News wire** — company and market headlines with clickable related tickers.
+- **News wire** — company and market headlines with clickable related tickers, refreshable on demand.
 - **Watchlist** — your own tracked symbols, saved in the browser and updating live.
 - **Keyboard-first** — `⌘K` / `/` to focus the command bar, arrow keys to navigate, `↑` to recall history, `HELP` for the full reference.
 
@@ -101,6 +101,13 @@ npm run dev
 ```
 
 Then open **http://localhost:3000**. That's it — no `.env`, no keys, no signup.
+
+The dev server binds to `127.0.0.1`, so it is only reachable from your own
+machine. To use the terminal from another device on your network, run
+`npm run dev:lan` instead — it listens on all interfaces and serves over
+HTTPS with a self-signed certificate (the first run may ask for your password
+to set that up, and other devices will show a one-time browser warning; if
+certificate setup fails it falls back to plain HTTP).
 
 To run an optimized production build instead:
 ```bash
