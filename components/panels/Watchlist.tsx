@@ -73,7 +73,7 @@ export default function Watchlist() {
                   title={q?.name ?? sym}
                 >
                   <span
-                    className={`w-16 shrink-0 truncate text-[12px] font-semibold ${
+                    className={`min-w-0 flex-1 truncate text-left text-[12px] font-semibold ${
                       active ? "text-term-amber-bright" : "text-term-amber"
                     }`}
                   >

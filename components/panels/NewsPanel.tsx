@@ -10,12 +10,11 @@ interface NewsPanelProps {
   /** Omit for a market-wide feed; pass a ticker for company news. */
   symbol?: string;
   title: string;
-  code?: string;
 }
 
-export default function NewsPanel({ symbol, title, code }: NewsPanelProps) {
+export default function NewsPanel({ symbol, title }: NewsPanelProps) {
   const setSymbol = useTerminal((s) => s.setSymbol);
-  const { data: items, isLoading, isError, error, isFetching } = useNews(symbol);
+  const { data: items, isLoading, isError, error, isFetching, refetch } = useNews(symbol);
   const [nowMs, setNowMs] = useState(() => Date.now());
 
   useEffect(() => {
@@ -24,7 +23,42 @@ export default function NewsPanel({ symbol, title, code }: NewsPanelProps) {
   }, []);
 
   return (
-    <Panel title={title} code={code} live={isFetching} bodyClassName="overflow-y-auto">
+    <Panel
+      title={title}
+      live={isFetching}
+      actions={
+        <button
+          type="button"
+          // Guard instead of `disabled` — disabling a focused button ejects
+          // keyboard focus to <body>, and isFetching also flips on background
+          // polls, which would yank focus with no user action at all.
+          onClick={() => {
+            if (!isFetching) refetch();
+          }}
+          aria-busy={isFetching}
+          title="Refresh news"
+          aria-label="Refresh news"
+          className="flex h-4 shrink-0 items-center rounded-sm bg-term-amber/10 px-1 text-term-amber-bright hover:bg-term-amber/20"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            width="11"
+            height="11"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+            className={isFetching ? "animate-spin motion-reduce:animate-none" : undefined}
+          >
+            <polyline points="23 4 23 10 17 10" />
+            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+          </svg>
+        </button>
+      }
+      bodyClassName="overflow-y-auto"
+    >
       {isLoading && !items ? (
         <div className="p-3 text-[12px] text-term-dim">Loading headlines…</div>
       ) : isError ? (
