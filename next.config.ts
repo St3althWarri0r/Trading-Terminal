@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
+const EMBED = process.env.TERMINAL_EMBED === "1";
+
 const nextConfig: NextConfig = {
+  // Embed build: static export served by Poseidon under /terminal.
+  // (headers() below is inert under `output: "export"` — harmless.)
+  ...(EMBED ? { output: "export" as const, basePath: "/terminal" } : {}),
+
   // yahoo-finance2 is a Node library with dynamic requires — keep it external
   // to the server bundle instead of letting Turbopack try to bundle it.
   serverExternalPackages: ["yahoo-finance2"],

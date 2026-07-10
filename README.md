@@ -152,6 +152,11 @@ Push the repo to GitHub, import it at [vercel.com/new](https://vercel.com/new), 
 
 **Self-host:** `npm run build && npm start` behind any Node host (a `PORT` env var picks the port).
 
+**Embed in Poseidon:** `EMBED_DEST=~/Poseidon/src/poseidon/api/static/terminal npm run build:embed`
+builds a static bundle (basePath `/terminal`, data from `/api/terminal/*`) and
+syncs it into Poseidon, which serves it natively — see Poseidon's
+`docs/terminal.md`.
+
 ---
 
 ## Project structure

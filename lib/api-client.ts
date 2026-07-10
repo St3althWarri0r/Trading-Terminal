@@ -10,6 +10,10 @@ import type {
 
 /** Client-side fetchers hitting our own /api routes. */
 
+/** Base path for the data API. Standalone serves /api; the Poseidon embed
+ *  build points at /api/terminal (inlined at build time via env). */
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "/api";
+
 async function getJSON<T>(url: string, signal?: AbortSignal): Promise<T> {
   const res = await fetch(url, { signal });
   if (!res.ok) {
@@ -27,7 +31,7 @@ async function getJSON<T>(url: string, signal?: AbortSignal): Promise<T> {
 
 export function fetchQuotes(symbols: string[], signal?: AbortSignal): Promise<Quote[]> {
   const q = encodeURIComponent(symbols.join(","));
-  return getJSON<Quote[]>(`/api/quote?symbols=${q}`, signal);
+  return getJSON<Quote[]>(`${API_BASE}/quote?symbols=${q}`, signal);
 }
 
 export function fetchChart(
@@ -36,24 +40,24 @@ export function fetchChart(
   signal?: AbortSignal
 ): Promise<ChartResponse> {
   return getJSON<ChartResponse>(
-    `/api/chart?symbol=${encodeURIComponent(symbol)}&range=${range}`,
+    `${API_BASE}/chart?symbol=${encodeURIComponent(symbol)}&range=${range}`,
     signal
   );
 }
 
 export function fetchSearch(q: string, signal?: AbortSignal): Promise<SearchResultItem[]> {
-  return getJSON<SearchResultItem[]>(`/api/search?q=${encodeURIComponent(q)}`, signal);
+  return getJSON<SearchResultItem[]>(`${API_BASE}/search?q=${encodeURIComponent(q)}`, signal);
 }
 
 export function fetchFundamentals(symbol: string, signal?: AbortSignal): Promise<Fundamentals> {
-  return getJSON<Fundamentals>(`/api/fundamentals?symbol=${encodeURIComponent(symbol)}`, signal);
+  return getJSON<Fundamentals>(`${API_BASE}/fundamentals?symbol=${encodeURIComponent(symbol)}`, signal);
 }
 
 export function fetchNews(symbol: string | undefined, signal?: AbortSignal): Promise<NewsItem[]> {
   const suffix = symbol ? `?symbol=${encodeURIComponent(symbol)}` : "";
-  return getJSON<NewsItem[]>(`/api/news${suffix}`, signal);
+  return getJSON<NewsItem[]>(`${API_BASE}/news${suffix}`, signal);
 }
 
 export function fetchMarket(signal?: AbortSignal): Promise<MarketOverview> {
-  return getJSON<MarketOverview>(`/api/market`, signal);
+  return getJSON<MarketOverview>(`${API_BASE}/market`, signal);
 }
