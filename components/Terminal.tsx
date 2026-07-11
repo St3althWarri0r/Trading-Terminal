@@ -12,6 +12,12 @@ import Fundamentals from "./panels/Fundamentals";
 import NewsPanel from "./panels/NewsPanel";
 import { useTerminal, type CenterTab } from "@/lib/store";
 
+/** Set at build time by the Poseidon embed (`NEXT_PUBLIC_EMBED_HOME=/`): the
+ *  host app's URL. Renders a "back to host" button — vital in desktop-webview
+ *  windows that have no browser chrome, where a navigation is otherwise
+ *  one-way. Unset in standalone builds, so nothing renders. */
+const EMBED_HOME = process.env.NEXT_PUBLIC_EMBED_HOME;
+
 const TABS: { key: CenterTab; code: string; label: string }[] = [
   { key: "chart", code: "GP", label: "Graph" },
   { key: "fundamentals", code: "FA", label: "Financials" },
@@ -58,6 +64,15 @@ export default function Terminal() {
           </span>
         </div>
         <CommandBar />
+        {EMBED_HOME && (
+          <a
+            href={EMBED_HOME}
+            title="Back to the Poseidon dashboard"
+            className="shrink-0 border border-term-line px-2 py-1 text-[11px] text-term-dim hover:border-term-amber-dim hover:text-term-amber"
+          >
+            ⌂ POSEIDON
+          </a>
+        )}
         <button
           type="button"
           onClick={() => setOverlay("help")}
